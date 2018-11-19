@@ -10,8 +10,8 @@
     <TemplateGuid>{122416d6-6b49-4ee2-a1e8-b825f31c79fe}</TemplateGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TeamStor.PuzzleAndroidGame</RootNamespace>
-    <AssemblyName>PuzzleAndroidGame</AssemblyName>
+    <RootNamespace>TeamStor.Nukesweeper</RootNamespace>
+    <AssemblyName>Nukesweeper</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
@@ -117,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\engine\intro\small_ball.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Gameplay\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

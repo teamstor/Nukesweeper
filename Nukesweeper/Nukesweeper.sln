@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzleAndroidGame", "PuzzleAndroidGame\PuzzleAndroidGame.csproj", "{783A6493-DFF8-404E-BAE8-A855EF87E431}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nukesweeper", "Nukesweeper\Nukesweeper.csproj", "{783A6493-DFF8-404E-BAE8-A855EF87E431}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamStor.Engine", "..\team-stor-engine-android\TeamStor.Engine\TeamStor.Engine.csproj", "{AC5AE28D-4948-4EB1-9BE8-45B750B52B20}"
 EndProject

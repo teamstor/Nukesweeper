@@ -1,0 +1,3 @@
+[submodule "team-stor-engine-android"]
+	path = team-stor-engine-android
+	url = https://github.com/teamstor/team-stor-engine-android.git

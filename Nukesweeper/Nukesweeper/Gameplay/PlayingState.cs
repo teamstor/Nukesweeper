@@ -10,32 +10,49 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Media;
 using TeamStor.Engine;
 using TeamStor.Engine.Graphics;
 
-namespace TeamStor.Nukesweeper.Menu
+namespace TeamStor.Nukesweeper.Gameplay
 {
-    public class MenuState : GameState
+    /// <summary>
+    /// Game state when a game session is being played.
+    /// </summary>
+    public class PlayingState : GameState
     {
+        /// <summary>
+        /// Playing field.
+        /// </summary>
+        public NukeField Field { get; private set; }
+
+        public PlayingState(NukeField field)
+        {
+            Field = field;
+        }
+
         public override void OnEnter(GameState previousState)
         {
+
         }
 
         public override void OnLeave(GameState nextState)
         {
+
         }
 
         public override void Update(double deltaTime, double totalTime, long count)
         {
+
         }
 
         public override void FixedUpdate(long count)
         {
+
         }
 
         public override void Draw(SpriteBatch batch, Vector2 screenSize)
         {
+
         }
     }
 }

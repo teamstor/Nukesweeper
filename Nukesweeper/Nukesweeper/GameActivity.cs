@@ -8,13 +8,13 @@ using Microsoft.Xna.Framework;
 
 using Game = TeamStor.Engine.Game;
 using Android.Views;
-using TeamStor.PuzzleAndroidGame.Menu;
+using TeamStor.Nukesweeper.Menu;
 
-namespace TeamStor.PuzzleAndroidGame
+namespace TeamStor.Nukesweeper
 {
     // https://github.com/MonoGame/MonoGame.Samples/blob/develop/Platformer2D/Platforms/Android/Activity1.cs
     [Activity(
-        Label = "Puzzle Android Game",
+        Label = "Nukesweeper",
         MainLauncher = true,
         AlwaysRetainTaskState = true,
         LaunchMode = LaunchMode.SingleInstance,

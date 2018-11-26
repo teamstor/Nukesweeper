@@ -23,6 +23,7 @@ namespace TeamStor.Nukesweeper.Gameplay
     /// </summary>
     public class PlayingState : GameState
     {
+        private float _zoom = 1;
         private float _heldTime = 0;
 
         /// <summary>
@@ -47,7 +48,22 @@ namespace TeamStor.Nukesweeper.Gameplay
 
         public override void Update(double deltaTime, double totalTime, long count)
         {
-            if(Input.Count > 0)
+            if(Input.Count >= 2 && LastInput.Count >= 2)
+            {
+                float distance = Vector2.Distance(Input[0].Position, Input[1].Position);
+                float lastDistance = Vector2.Distance(LastInput[0].Position, LastInput[1].Position);
+
+                if(distance > lastDistance)
+                    _zoom += (distance - lastDistance) * 0.0015f;
+                else
+                    _zoom -= (lastDistance - distance) * 0.0015f;
+
+                if(_zoom < 1)
+                    _zoom = 1;
+                if(_zoom >= 1.5)
+                    _zoom = 1.5f;
+            }
+            else if(Input.Count > 0)
                 _heldTime += (float)deltaTime;
             else if(Input.Count == 0 && LastInput.Count > 0)
             {
@@ -80,7 +96,6 @@ namespace TeamStor.Nukesweeper.Gameplay
                         {
                             if(_heldTime > 0.1)
                             {
-
                                 switch(Field.FlagAt(fx, fy))
                                 {
                                     case FlagType.None:
@@ -131,6 +146,8 @@ namespace TeamStor.Nukesweeper.Gameplay
 
             int x = (int)(screenSize.X / 2) - width / 2;
             int y = (int)(screenSize.Y / 2) - height / 2;
+
+            batch.Transform = Matrix.CreateScale(_zoom) * Matrix.CreateTranslation(new Vector3(-(screenSize / 2 * (float)(_zoom - 1.0)) * (float)Game.Scale, 0));
 
             for(int fx = 0; fx < Field.Width; fx++)
             {

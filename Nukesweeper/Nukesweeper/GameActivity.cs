@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Game = TeamStor.Engine.Game;
 using Android.Views;
 using TeamStor.Nukesweeper.Menu;
+using TeamStor.Nukesweeper.Gameplay;
 
 namespace TeamStor.Nukesweeper
 {
@@ -26,7 +27,7 @@ namespace TeamStor.Nukesweeper
         {
             base.OnCreate(bundle);
 
-            Game teamStorGame = new Game(new MenuState());
+            Game teamStorGame = new Game(new PlayingState(new NukeField(7, 12, 5)));
             SetContentView((View)teamStorGame.Services.GetService(typeof(View)));
 
             SystemUiFlags uiOptions = SystemUiFlags.HideNavigation |
@@ -40,6 +41,7 @@ namespace TeamStor.Nukesweeper
             Window.DecorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
 
             teamStorGame.Stats |= Game.DebugStats.FPS;
+            teamStorGame.Stats |= Game.DebugStats.General;
             teamStorGame.Run();
         }
     }

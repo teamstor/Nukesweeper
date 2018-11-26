@@ -19,6 +19,7 @@ namespace TeamStor.Nukesweeper.Gameplay
     public class NukeField
     {
         private BitArray _field;
+        private BitArray _fieldRevealed;
         private FlagType[] _fieldFlags;
 
         /// <summary>
@@ -43,7 +44,13 @@ namespace TeamStor.Nukesweeper.Gameplay
             NukeCount = nukeCount;
 
             _field = new BitArray(width * height);
+            _fieldRevealed = new BitArray(width * height);
             _fieldFlags = new FlagType[width * height];
+
+            Random rand = new Random();
+
+            for(int i = 0; i < nukeCount; i++)
+                _field[rand.Next() % _field.Length] = true;
         }
 
         public bool this[int x, int y]
@@ -81,6 +88,28 @@ namespace TeamStor.Nukesweeper.Gameplay
         {
             if(x >= 0 && x < Width && y >= 0 && y < Height)
                 _fieldFlags[(y * Width) + x] = value;
+        }
+
+        /// <param name="x">The X position of the tile to check.</param>
+        /// <param name="y">The Y position of the tile to check.</param>
+        /// <returns>If the tile is revealed or not.</returns>
+        public bool IsRevealed(int x, int y)
+        {
+            if(x < 0 || x >= Width || y < 0 || y >= Height)
+                return false;
+            return _fieldRevealed[(y * Width) + x];
+        }
+
+        /// <summary>
+        /// Sets if the specified tile is revealed.
+        /// </summary>
+        /// <param name="x">The X position of the tile to set.</param>
+        /// <param name="y">The Y position of the tile to set.</param>
+        /// <param name="value">New value to set.</param>
+        public void SetRevealed(int x, int y, bool value)
+        {
+            if(x >= 0 && x < Width && y >= 0 && y < Height)
+                _fieldRevealed[(y * Width) + x] = value;
         }
 
         /// <param name="x">The X position of the tile to check.</param>

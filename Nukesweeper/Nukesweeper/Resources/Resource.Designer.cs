@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("TeamStor.PuzzleAndroidGame.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("TeamStor.Nukesweeper.Resource", IsApplication=true)]
 
-namespace TeamStor.PuzzleAndroidGame
+namespace TeamStor.Nukesweeper
 {
 	
 	

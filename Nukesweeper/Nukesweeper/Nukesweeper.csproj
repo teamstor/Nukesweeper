@@ -61,6 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameActivity.cs" />
+    <Compile Include="Gameplay\Country.cs" />
+    <Compile Include="Gameplay\FlagType.cs" />
+    <Compile Include="Gameplay\NukeField.cs" />
+    <Compile Include="Gameplay\PlayingState.cs" />
     <Compile Include="Menu\MenuState.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,7 +77,9 @@
     <AndroidAsset Include="Assets\engine\RobotoMono-Bold.ttf" />
     <AndroidAsset Include="Assets\engine\RobotoMono-Regular.ttf" />
     <None Include="Resources\AboutResources.txt" />
-    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -104,12 +110,6 @@
     </AndroidNativeLibrary>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\team-stor-engine-android\TeamStor.Engine\TeamStor.Engine.csproj">
-      <Project>{ac5ae28d-4948-4eb1-9be8-45b750b52b20}</Project>
-      <Name>TeamStor.Engine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -119,7 +119,25 @@
     <AndroidAsset Include="Assets\engine\intro\small_ball.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Gameplay\" />
+    <ProjectReference Include="..\..\team-stor-engine-android\TeamStor.Engine\TeamStor.Engine.csproj">
+      <Project>{ac5ae28d-4948-4eb1-9be8-45b750b52b20}</Project>
+      <Name>TeamStor.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\nuke.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\flag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\flagvisual.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\revealed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

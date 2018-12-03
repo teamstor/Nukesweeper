@@ -37,11 +37,17 @@ namespace TeamStor.Nukesweeper.Gameplay
         /// </summary>
         public int NukeCount { get; private set; }
 
+        /// <summary>
+        /// The amount of normal flags left.
+        /// </summary>
+        public int FlagsLeft { get; private set; }
+
         public NukeField(int width, int height, int nukeCount)
         {
             Width = width;
             Height = height;
             NukeCount = nukeCount;
+            FlagsLeft = nukeCount;
 
             _field = new BitArray(width * height);
             _fieldRevealed = new BitArray(width * height);
@@ -87,7 +93,19 @@ namespace TeamStor.Nukesweeper.Gameplay
         public void SetFlagAt(int x, int y, FlagType value)
         {
             if(x >= 0 && x < Width && y >= 0 && y < Height)
+            {
+                if(_fieldFlags[(y * Width) + x] == FlagType.Flag &&
+                    value != FlagType.Flag)
+                    FlagsLeft++;
+
+                if(value == FlagType.Flag && FlagsLeft <= 0)
+                    throw new Exception("Maximum amount of flags reached (flag count = nuke count).");
+
                 _fieldFlags[(y * Width) + x] = value;
+
+                if(value == FlagType.Flag)
+                    FlagsLeft--;
+            }
         }
 
         /// <param name="x">The X position of the tile to check.</param>

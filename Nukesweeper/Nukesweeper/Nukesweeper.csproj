@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameActivity.cs" />
+    <Compile Include="Gameplay\Camera.cs" />
     <Compile Include="Gameplay\Country.cs" />
     <Compile Include="Gameplay\FlagType.cs" />
     <Compile Include="Gameplay\NukeField.cs" />
@@ -125,19 +126,32 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\placeholder\empty.png" />
+    <AndroidAsset Include="Assets\placeholder\tiles\empty.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\placeholder\nuke.png" />
+    <AndroidAsset Include="Assets\placeholder\tiles\nuke.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\placeholder\flag.png" />
+    <AndroidAsset Include="Assets\placeholder\tiles\flag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\placeholder\flagvisual.png" />
+    <AndroidAsset Include="Assets\placeholder\tiles\flagvisual.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\placeholder\revealed.png" />
+    <AndroidAsset Include="Assets\placeholder\tiles\revealed.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\reactions\idle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\reactions\lose.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\reactions\win.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\placeholder\reactions\hover.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

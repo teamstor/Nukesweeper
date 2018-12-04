@@ -22,7 +22,11 @@ namespace TeamStor.Nukesweeper.Gameplay
         private bool _isPanning;
         private Vector2 _panStart;
         private Vector2 _currentPan;
-        private Vector2 _extraVelocity;
+        private Vector2 _extraVelocity = Vector2.Zero;
+        private Vector2 _extraVelocityCurrent = Vector2.Zero;
+
+        private bool _isZooming;
+        private double _zoomStart;
 
         private bool _isFirstFrame = true;
 
@@ -39,7 +43,7 @@ namespace TeamStor.Nukesweeper.Gameplay
         /// <summary>
         /// Current zoom.
         /// </summary>
-        public float Zoom = 0.4f;
+        public float Zoom = 1;
 
         /// <summary>
         /// Minimum amount that can be zoomed.
@@ -63,11 +67,22 @@ namespace TeamStor.Nukesweeper.Gameplay
             }
         }
 
+        public bool IsMoving { get { return _currentPan != Vector2.Zero || _isZooming; } }
+
         /// <summary>
         /// If the camera just finished panning.
         /// In this case, no press should be made this frame.
         /// </summary>
         public bool JustDidPan
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// If the camera just finished zooming.
+        /// In this case, no press should be made this frame.
+        /// </summary>
+        public bool JustDidZoom
         {
             get; private set;
         }
@@ -94,27 +109,49 @@ namespace TeamStor.Nukesweeper.Gameplay
                 (float)PlayingState.Game.Scale) - new Vector2(0, 180);
 
             Vector2 fieldSize = new Vector2(
-                PlayingState.Field.Width * (PlayingState.TILE_SIZE + 2), 
+                PlayingState.Field.Width * (PlayingState.TILE_SIZE + 2),
                 PlayingState.Field.Height * (PlayingState.TILE_SIZE + 2));
 
-            MinimumZoom = Math.Min(1, screenSize.X / (fieldSize.X + 10));
+            MinimumZoom = Math.Min(1, screenSize.X / (fieldSize.X + 120));
 
             fieldSize *= Zoom;
 
-            if(_isFirstFrame || screenSize.X > fieldSize.X)
-                Translation.X = screenSize.X / 2 - fieldSize.X / 2;
-            if(_isFirstFrame || screenSize.Y > fieldSize.Y)
-                Translation.Y = screenSize.Y / 2 - fieldSize.Y / 2;
-
             _isFirstFrame = false;
             JustDidPan = false;
+            JustDidZoom = false;
 
             if(input.Count >= 1 && lastInput.Count == 0 && (fieldSize.X >= screenSize.X || fieldSize.Y >= screenSize.Y))
             {
                 _isPanning = true;
                 _panStart = AggregatePosition(input);
                 _currentPan = new Vector2(0, 0);
-                _extraVelocity = new Vector2(0, 0);
+                _extraVelocityCurrent = new Vector2(0, 0);
+            }
+
+            if(input.Count >= 2 && lastInput.Count <= 1)
+            {
+                _isZooming = true;
+                _zoomStart = Vector2.Distance(input[0].Position, input[1].Position);
+            }
+
+            if(_isZooming && input.Count <= 1 && lastInput.Count >= 2)
+            {
+                _isZooming = false;
+                JustDidZoom = true;
+            }
+            else if(_isZooming && input.Count >= 2 && lastInput.Count >= 2)
+            {
+                float zoomDiff = Zoom;
+                Vector2 oldFieldSize = fieldSize;
+                fieldSize /= Zoom;
+
+                Zoom += (Vector2.Distance(input[0].Position, input[1].Position) - Vector2.Distance(lastInput[0].Position, lastInput[1].Position)) * 0.001f;
+                Zoom = MathHelper.Clamp(Zoom, MinimumZoom, 1);
+                zoomDiff = Zoom - zoomDiff;
+                fieldSize *= Zoom;
+
+                Vector2 mouseThing = ((AggregatePosition(input) - Translation - new Vector2(0, 180)) / oldFieldSize);
+                Translation -= (fieldSize - oldFieldSize) * mouseThing;
             }
 
             if(_isPanning && input.Count == 0 && lastInput.Count >= 1)
@@ -131,22 +168,36 @@ namespace TeamStor.Nukesweeper.Gameplay
                 }
 
                 _currentPan = new Vector2(0, 0);
+                _extraVelocity += _extraVelocityCurrent;
                 _isPanning = false;
             }
             else if(_isPanning)
             {
                 _currentPan = new Vector2(0, 0);
+                _extraVelocityCurrent = new Vector2(0, 0);
+
+                if(input.Count != lastInput.Count)
+                {
+                    if(Math.Abs(AggregatePosition(lastInput).X - _panStart.X) > 4)
+                        Translation.X += AggregatePosition(lastInput).X - _panStart.X;
+                    if(Math.Abs(AggregatePosition(lastInput).Y - _panStart.Y) > 4)
+                        Translation.Y += AggregatePosition(lastInput).Y - _panStart.Y;
+
+                    _panStart = AggregatePosition(input);
+                }
 
                 if(Math.Abs(AggregatePosition(input).X - _panStart.X) > 4)
                 {
                     _currentPan.X = AggregatePosition(input).X - _panStart.X;
-                    _extraVelocity.X = AggregatePosition(input).X - AggregatePosition(lastInput).X;
+                    if(input.Count == lastInput.Count)
+                        _extraVelocityCurrent.X = (AggregatePosition(input).X - AggregatePosition(lastInput).X) * 0.6f;
                 }
 
                 if(Math.Abs(AggregatePosition(input).Y - _panStart.Y) > 4)
                 {
                     _currentPan.Y = AggregatePosition(input).Y - _panStart.Y;
-                    _extraVelocity.Y = AggregatePosition(input).Y - AggregatePosition(lastInput).Y;
+                    if(input.Count == lastInput.Count)
+                        _extraVelocityCurrent.Y = (AggregatePosition(input).Y - AggregatePosition(lastInput).Y) * 0.6f;
                 }
 
                 Vector2 extraOutsideBounds = new Vector2(0, 0);
@@ -162,38 +213,41 @@ namespace TeamStor.Nukesweeper.Gameplay
                     extraOutsideBounds.Y = 40 - (Translation.Y + _currentPan.Y);
 
                 if(extraOutsideBounds.X != 0)
-                    _currentPan.X = MathHelper.Lerp(_currentPan.X, 0, 
-                        (Math.Min(120f, Math.Abs(extraOutsideBounds.X)) / 120f) * 0.4f);
+                    _currentPan.X = _currentPan.X + extraOutsideBounds.X;
 
                 if(extraOutsideBounds.Y != 0)
-                    _currentPan.Y = MathHelper.Lerp(_currentPan.Y, 0,
-                        (Math.Min(120f, Math.Abs(extraOutsideBounds.Y)) / 120f) * 0.4f);
+                    _currentPan.Y = _currentPan.Y + extraOutsideBounds.Y;
             }
 
-            if(!_isPanning)
+            if(!_isPanning && !_isZooming)
             {
                 if(Math.Abs(_extraVelocity.X) > 0)
                 {
                     Translation.X += _extraVelocity.X;
-                    _extraVelocity.X = MathHelper.LerpPrecise(_extraVelocity.X, 0, (float)PlayingState.Game.DeltaTime * 20f);
+                    _extraVelocity.X = MathHelper.LerpPrecise(_extraVelocity.X, 0, (float)PlayingState.Game.DeltaTime * 10f);
                 }
 
                 if(Math.Abs(_extraVelocity.Y) > 0)
                 {
                     Translation.Y += _extraVelocity.Y;
-                    _extraVelocity.Y = MathHelper.LerpPrecise(_extraVelocity.Y, 0, (float)PlayingState.Game.DeltaTime * 20f);
+                    _extraVelocity.Y = MathHelper.LerpPrecise(_extraVelocity.Y, 0, (float)PlayingState.Game.DeltaTime * 10f);
                 }
             }
 
-            Translation.X = MathHelper.LerpPrecise(
-                Translation.X, 
-                MathHelper.Clamp(Translation.X, -(fieldSize.X - screenSize.X) - 40, 40),
-                (float)PlayingState.Game.DeltaTime * 30f);
-
-            Translation.Y = MathHelper.LerpPrecise(
-                Translation.Y,
-                MathHelper.Clamp(Translation.Y, -(fieldSize.Y - screenSize.Y) - 40, 40),
-                (float)PlayingState.Game.DeltaTime * 30f);
+            if(_isFirstFrame || screenSize.X > fieldSize.X)
+            {
+                Translation.X = screenSize.X / 2 - fieldSize.X / 2;
+                _currentPan.X = 0;
+            }
+            else
+                Translation.X = MathHelper.Clamp(Translation.X, -(fieldSize.X - screenSize.X) - 40, 40); if(_isFirstFrame || screenSize.Y > fieldSize.Y)
+            {
+                Translation.Y = screenSize.Y / 2 - fieldSize.Y / 2;
+                _currentPan.Y = 0;
+            }
+            else
+                Translation.Y = MathHelper.Clamp(Translation.Y, -(fieldSize.Y - screenSize.Y) - 40, 40);
         }
     }
 }
+ 

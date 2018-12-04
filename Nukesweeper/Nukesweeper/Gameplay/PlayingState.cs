@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input.Touch;
 using TeamStor.Engine;
 
 using SpriteBatch = TeamStor.Engine.Graphics.SpriteBatch;
@@ -23,6 +24,11 @@ namespace TeamStor.Nukesweeper.Gameplay
         /// </summary>
         public Camera Camera { get; private set; }
 
+        /// <summary>
+        /// Point where the menu is being shown.
+        /// </summary>
+        public Point MenuTile = new Point(-1, -1);
+
         public PlayingState(NukeField field)
         {
             Field = field;
@@ -42,6 +48,28 @@ namespace TeamStor.Nukesweeper.Gameplay
         public override void Update(double deltaTime, double totalTime, long count)
         {
             Camera.UpdatePosition(Input, LastInput);
+
+            if(!Camera.IsMoving && !Camera.JustDidPan && !Camera.JustDidZoom)
+            {
+                foreach(TouchLocation location in Input)
+                {
+                    Point zeroPoint = Vector2.Transform(Vector2.Zero, Camera.Transform).ToPoint();
+
+                    int x, y;
+                    for(x = 0; x < Field.Width; x++)
+                    {
+                        for(y = 0; y < Field.Height; y++)
+                        {
+                            Rectangle area = new Rectangle(
+                                Vector2.Transform(new Vector2(x * (TILE_SIZE + 2) * (float)Game.Scale, y * (TILE_SIZE + 2) * (float)Game.Scale), Camera.Transform).ToPoint(),
+                                new Point((int)(TILE_SIZE * Camera.Zoom * Game.Scale), (int)(TILE_SIZE * Camera.Zoom * Game.Scale)));
+
+                            if(area.Contains(location.Position * (float)Game.Scale))
+                                MenuTile = new Point(x, y);
+                        }
+                    }
+                }
+            }
         }
 
         public override void FixedUpdate(long count)
@@ -77,6 +105,18 @@ namespace TeamStor.Nukesweeper.Gameplay
                         TILE_SIZE, TILE_SIZE),
                         Assets.Get<Texture2D>("placeholder/tiles/" + texture),
                         Color.White);
+                }
+            }
+
+            for(x = 0; x < Field.Width; x++)
+            {
+                for(y = 0; y < Field.Height; y++)
+                {
+                    if(MenuTile == new Point(x, y))
+                    {
+                        batch.Rectangle(new Rectangle(x * (TILE_SIZE + 2), y * (TILE_SIZE + 2), (TILE_SIZE + 2) * 2 + TILE_SIZE, TILE_SIZE), Color.Black * 0.6f);
+                        batch.Outline(new Rectangle(x * (TILE_SIZE + 2), y * (TILE_SIZE + 2), (TILE_SIZE + 2) * 2 + TILE_SIZE, TILE_SIZE), Color.White * 0.6f, 3);
+                    }
                 }
             }
 

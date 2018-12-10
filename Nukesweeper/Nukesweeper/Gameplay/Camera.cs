@@ -67,6 +67,20 @@ namespace TeamStor.Nukesweeper.Gameplay
             }
         }
 
+        /// <summary>
+        /// Transform to apply for this camera without Game.Scale.
+        /// </summary>
+        public Matrix TransformWithoutScale
+        {
+            get
+            {
+                return Matrix.CreateScale(Zoom) * Matrix.CreateTranslation(
+                    (Translation.X + _currentPan.X),
+                    (Translation.Y + _currentPan.Y + 180),
+                    0);
+            }
+        }
+
         public bool IsMoving { get { return _currentPan != Vector2.Zero || _isZooming; } }
 
         /// <summary>
@@ -178,15 +192,15 @@ namespace TeamStor.Nukesweeper.Gameplay
 
                 if(input.Count != lastInput.Count)
                 {
-                    if(Math.Abs(AggregatePosition(lastInput).X - _panStart.X) > 4)
+                    if(Math.Abs(AggregatePosition(lastInput).X - _panStart.X) > 8)
                         Translation.X += AggregatePosition(lastInput).X - _panStart.X;
-                    if(Math.Abs(AggregatePosition(lastInput).Y - _panStart.Y) > 4)
+                    if(Math.Abs(AggregatePosition(lastInput).Y - _panStart.Y) > 8)
                         Translation.Y += AggregatePosition(lastInput).Y - _panStart.Y;
 
                     _panStart = AggregatePosition(input);
                 }
 
-                if(Math.Abs(AggregatePosition(input).X - _panStart.X) > 4)
+                if(Math.Abs(AggregatePosition(input).X - _panStart.X) > 8)
                 {
                     _currentPan.X = AggregatePosition(input).X - _panStart.X;
                     if(input.Count == lastInput.Count)
@@ -237,12 +251,15 @@ namespace TeamStor.Nukesweeper.Gameplay
             if(_isFirstFrame || screenSize.X > fieldSize.X)
             {
                 Translation.X = screenSize.X / 2 - fieldSize.X / 2;
+                _panStart.X = AggregatePosition(input).X;
                 _currentPan.X = 0;
             }
             else
                 Translation.X = MathHelper.Clamp(Translation.X, -(fieldSize.X - screenSize.X) - 40, 40); if(_isFirstFrame || screenSize.Y > fieldSize.Y)
+            if(_isFirstFrame || screenSize.Y > fieldSize.Y)
             {
                 Translation.Y = screenSize.Y / 2 - fieldSize.Y / 2;
+                _panStart.Y = AggregatePosition(input).Y;
                 _currentPan.Y = 0;
             }
             else

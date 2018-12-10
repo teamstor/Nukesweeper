@@ -140,7 +140,9 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\placeholder\tiles\revealed.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidAsset Include="Assets\icons\explode.png" />
+  </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\placeholder\reactions\idle.png" />
   </ItemGroup>
@@ -152,6 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\placeholder\reactions\hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\icons\flag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\icons\flagvisual.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

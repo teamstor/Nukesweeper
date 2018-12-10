@@ -247,7 +247,7 @@ namespace TeamStor.Nukesweeper.Gameplay
                         Assets.Get<Texture2D>("placeholder/tiles/" + texture),
                         Color.White);
 
-                    if(Field.IsRevealed(x, y) && !Field[x, y])
+                    if(Field.IsRevealed(x, y) && !Field[x, y] && Field.SurroundingNukesAt(x, y) > 0)
                     {
                         Vector2 measure = Game.DefaultFonts.Bold.Measure(32, Field.SurroundingNukesAt(x, y).ToString());
                         batch.Text(FontStyle.Bold, 32, Field.SurroundingNukesAt(x, y).ToString(), rect.Center.ToVector2() - measure / 2, Color.Red);

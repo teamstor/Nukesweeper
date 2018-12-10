@@ -27,7 +27,7 @@ namespace TeamStor.Nukesweeper
         {
             base.OnCreate(bundle);
 
-            Game teamStorGame = new Game(new PlayingState(new NukeField(20, 20, 2)));
+            Game teamStorGame = new Game(new PlayingState(new NukeField(9, 9, 10)));
             SetContentView((View)teamStorGame.Services.GetService(typeof(View)));
 
             SystemUiFlags uiOptions = SystemUiFlags.HideNavigation |

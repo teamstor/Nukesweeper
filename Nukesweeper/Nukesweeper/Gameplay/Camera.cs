@@ -126,11 +126,10 @@ namespace TeamStor.Nukesweeper.Gameplay
                 PlayingState.Field.Width * (PlayingState.TILE_SIZE + 2),
                 PlayingState.Field.Height * (PlayingState.TILE_SIZE + 2));
 
-            MinimumZoom = Math.Min(1, screenSize.X / (fieldSize.X + 120));
+            MinimumZoom = Math.Min(1, screenSize.X / (fieldSize.X + 60));
 
             fieldSize *= Zoom;
 
-            _isFirstFrame = false;
             JustDidPan = false;
             JustDidZoom = false;
 
@@ -248,6 +247,20 @@ namespace TeamStor.Nukesweeper.Gameplay
                 }
             }
 
+            for(float i = 1; i >= 0.8; i -= 0.05f)
+            {
+                Vector2 zFieldSize = new Vector2(
+                    PlayingState.Field.Width * (PlayingState.TILE_SIZE + 2),
+                    PlayingState.Field.Height * (PlayingState.TILE_SIZE + 2)) * i;
+
+                if(screenSize.X > zFieldSize.X + 60 && screenSize.Y > zFieldSize.Y + 60)
+                {
+                    Zoom = i;
+                    fieldSize = zFieldSize;
+                    break;
+                }
+            }
+
             if(_isFirstFrame || screenSize.X > fieldSize.X)
             {
                 Translation.X = screenSize.X / 2 - fieldSize.X / 2;
@@ -255,7 +268,7 @@ namespace TeamStor.Nukesweeper.Gameplay
                 _currentPan.X = 0;
             }
             else
-                Translation.X = MathHelper.Clamp(Translation.X, -(fieldSize.X - screenSize.X) - 40, 40); if(_isFirstFrame || screenSize.Y > fieldSize.Y)
+                Translation.X = MathHelper.Clamp(Translation.X, -(fieldSize.X - screenSize.X) - 40, 40);
             if(_isFirstFrame || screenSize.Y > fieldSize.Y)
             {
                 Translation.Y = screenSize.Y / 2 - fieldSize.Y / 2;
@@ -264,6 +277,8 @@ namespace TeamStor.Nukesweeper.Gameplay
             }
             else
                 Translation.Y = MathHelper.Clamp(Translation.Y, -(fieldSize.Y - screenSize.Y) - 40, 40);
+
+            _isFirstFrame = false;
         }
     }
 }
